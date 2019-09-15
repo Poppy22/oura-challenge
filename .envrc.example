@@ -1,0 +1,2 @@
+export DEBUG_MODE=True
+export DB_FILE=users.db
