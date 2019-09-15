@@ -9,5 +9,10 @@ The **frontend** folder holds an Angular application as a web client and the
 ### activating the venv
 
 ```bash
-virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
+cd backend && virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
+```
+
+### deploying the frontend
+```bash
+cd frontend/oura-app && ng deploy
 ```
