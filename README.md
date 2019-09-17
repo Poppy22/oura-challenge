@@ -6,6 +6,10 @@ The **frontend** folder holds an Angular application as a web client and the
 
 
 ## NOTES:
+### environment variables
+Environment variables' basic structure is in `.envrc.example` (we recommend using the package direnv for
+easily setting/unsetting them). Just duplicate the file to `.envrc` to make it work.
+
 ### activating the venv
 
 ```bash
