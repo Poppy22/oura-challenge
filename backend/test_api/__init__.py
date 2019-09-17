@@ -1,6 +1,7 @@
 import os
+import logging
 import shelve
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, ValidationError
 from flask import Flask, g, request
 from flask_restful import Resource, Api
 
@@ -8,6 +9,8 @@ DEBUG_MODE = os.getenv('DEBUG_MODE')
 DB_USER = os.getenv('DB_FILE')
 app = Flask(__name__)
 api = Api(app)
+logging.basicConfig(filename='../test_api.log', level=logging.INFO,
+                    format='%(asctime)s:%(funcName)s:%(lineno)d:%(message)s')
 
 
 def get_db(db_file):
@@ -43,9 +46,14 @@ class User(Resource):
             return {'message': 'User {} not found'.format(username), 'data': None}, 404
 
         schema = UserSchema()
-        result = schema.load(request.json)  # TODO ValidationError
-        db[username] = result
-        return {'message': 'User modified', 'data': result}, 200
+        try:
+            result = schema.load(request.json)
+            db[username] = result
+            return {'message': 'User modified', 'data': result}, 200
+
+        except ValidationError as err:
+            logging.error("Validation error " + str(err.messages))
+            return {'message': 'Validation error', 'data': err.messages}, 500
 
     def delete(self, username):
         db = get_db(DB_USER)
@@ -72,14 +80,19 @@ class NewUser(Resource):
         db = get_db(DB_USER)
 
         schema = UserSchema()
-        result = schema.load(request.json)  # TODO ValidationError
-        username = request.json['username']
+        try:
+            result = schema.load(request.json)
+            username = request.json['username']
 
-        if username in db:
-            return {'message': 'User {} already exists'.format(username), 'data': None}, 400
+            if username in db:
+                return {'message': 'User {} already exists'.format(username), 'data': None}, 400
 
-        db[username] = result
-        return {'message': 'User created', 'data': result}, 200
+            db[username] = result
+            return {'message': 'User created', 'data': result}, 200
+
+        except ValidationError as err:
+            logging.error("Validation error " + str(err.messages))
+            return {'message': 'Validation error', 'data': err.messages}, 500
 
 
 api.add_resource(User, '/user/<string:username>')
