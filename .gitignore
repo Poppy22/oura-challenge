@@ -143,3 +143,4 @@ speed-measure-plugin*.json
 /typings
 .envrc
 users.db
+revoked.db
