@@ -1,15 +1,18 @@
-import os
 import logging
+import os
 import shelve
-from marshmallow import Schema, fields, ValidationError
+
 from flask import Flask, g, request
-from flask_restful import Resource, Api
-from passlib.hash import pbkdf2_sha256 as sha256
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import (
     create_access_token, create_refresh_token, jwt_required,
     jwt_refresh_token_required, get_jwt_identity, get_raw_jwt
 )
+from flask_restful import Resource, Api
+from marshmallow import Schema, fields, ValidationError
+from passlib.hash import pbkdf2_sha256 as sha256
+
+from .oura_interface import get_sleep_data
 
 app = Flask(__name__)
 app.config.update(
@@ -31,7 +34,6 @@ logging.basicConfig(filename='../test_api.log', level=logging.INFO,
 def get_db(db_file):
     db = getattr(g, '_database', None)
     if db is None:
-        print("is none")
         db = g._database = shelve.open(os.path.join(os.path.dirname(__file__), "../" + db_file))
     return db
 
@@ -177,12 +179,19 @@ class TokenRefresh(Resource):
         }}, 200
 
 
+class SleepData(Resource):
+    @jwt_required
+    def get(self):
+        return {'msg': 'Request sleep data', 'data': get_sleep_data()}, 200
+
+
 api.add_resource(User, '/user/<string:username>')
 api.add_resource(AllUsers, '/all_users')
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(TokenRefresh, '/token/refresh')
+api.add_resource(SleepData, '/sleep')
 
 
 if __name__ == '__main__':
