@@ -12,7 +12,7 @@ from flask_restful import Resource, Api
 from marshmallow import Schema, fields, ValidationError
 from passlib.hash import pbkdf2_sha256 as sha256
 
-from .oura_interface import get_sleep_data
+from oura_interface import get_sleep_data
 
 app = Flask(__name__)
 app.config.update(
@@ -182,7 +182,7 @@ class TokenRefresh(Resource):
 class SleepData(Resource):
     @jwt_required
     def get(self):
-        return {'msg': 'Request sleep data', 'data': get_sleep_data()}, 200
+        return {'msg': 'Request sleep data', 'data': get_sleep_data('2019-01-01')}, 200
 
 
 api.add_resource(User, '/user/<string:username>')
@@ -195,4 +195,4 @@ api.add_resource(SleepData, '/sleep')
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
