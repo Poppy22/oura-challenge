@@ -1,6 +1,7 @@
 import logging
 import os
 import shelve
+from flask_cors import CORS
 
 from flask import Flask, g, request
 from flask_jwt_extended import JWTManager
@@ -15,6 +16,7 @@ from passlib.hash import pbkdf2_sha256 as sha256
 from oura_interface import get_sleep_data
 
 app = Flask(__name__)
+CORS(app)
 app.config.update(
     DEBUG=os.getenv('DEBUG_MODE'),
     JWT_SECRET_KEY=os.getenv('JWT_SECRET'),

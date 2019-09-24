@@ -3,10 +3,17 @@ import requests
 
 ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
-BASE_URL = "https://api.ouraring.com/v1/"
-TYPE_SLEEP = "sleep"
-TYPE_ACTIVITY = "activity"
-TYPE_READINESS = "readiness"
+BASE_URL = "https://api.ouraring.com/"
+TYPE_SLEEP = "v1/sleep"
+TYPE_ACTIVITY = "v1/activity"
+TYPE_READINESS = "v1/readiness"
+
+
+def get_new_refresh_token(refresh_token, client_id, client_secret):
+    url = BASE_URL + "oauth/token?grant_type=refresh_token&refresh_token="
+    url += refresh_token
+    url += "&client_id=" + client_id + "&client_secret=" + client_secret
+    return requests.post(url)
 
 
 def get_user_info():
