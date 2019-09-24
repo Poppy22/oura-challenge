@@ -10,7 +10,7 @@ import { throwError, BehaviorSubject } from 'rxjs';
 })
 export class TokenInterceptorService implements HttpInterceptor {
   private isRefreshing = false;
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private refreshTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
     if (!this.isRefreshing) {
@@ -18,19 +18,17 @@ export class TokenInterceptorService implements HttpInterceptor {
       this.refreshTokenSubject.next(null);
 
       return this.auth.refreshToken().pipe(
-        switchMap((token: any) => {
+        switchMap((res: any) => {
           this.isRefreshing = false;
-          this.refreshTokenSubject.next(token.jwt);
-          return next.handle(this.addToken(request, token.jwt));
+          this.refreshTokenSubject.next(res.data.access_token);
+          return next.handle(this.addToken(request, res.data.access_token));
         }));
 
     } else {
       return this.refreshTokenSubject.pipe(
-        filter(token => token != null),
+        filter(token => token !== null),
         take(1),
-        switchMap(jwt => {
-          return next.handle(this.addToken(request, jwt));
-        }));
+        switchMap(jwt => next.handle(this.addToken(request, jwt))));
     }
   }
 
@@ -43,18 +41,14 @@ export class TokenInterceptorService implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
-    const isLoggedIn = this.auth.loggedIn();
-    const isApiUrl = request.url.startsWith(environment.baseUrl);
+    const isLoggedIn : boolean = this.auth.loggedIn();
+    const isApiUrl : boolean = request.url.startsWith(environment.baseUrl);
     if (isLoggedIn && isApiUrl) {
-      console.log('added headers');
       request = this.addToken(request, this.auth.getToken(request.url));
     }
-    console.log('intercept', request.url, request.headers);
 
-    // return next.handle(request);
     return next.handle(request).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
-        console.log('401 error');
         return this.handle401Error(request, next);
       } else {
         return throwError(error);

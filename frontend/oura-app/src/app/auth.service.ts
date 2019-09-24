@@ -9,6 +9,7 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   public url = {
+    all: environment.baseUrl + '/all_users',
     register: environment.baseUrl + '/register',
     login: environment.baseUrl + '/login',
     logout: environment.baseUrl + '/logout',
@@ -39,7 +40,6 @@ export class AuthService {
       .subscribe(
         res => {
           this.removeTokens();
-          console.log('logged out');
         },
         err => console.error(err)
       );
@@ -47,7 +47,7 @@ export class AuthService {
 
   refreshToken() {
     return this.http.post<any>(this.url.tokenRefresh, {})
-      .pipe(tap((res) => {
+      .pipe(tap(res => {
         localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
       }));
   }
@@ -74,5 +74,13 @@ export class AuthService {
   removeTokens() {
     localStorage.removeItem(this.ACCESS_TOKEN);
     localStorage.removeItem(this.REFRESH_TOKEN);
+  }
+
+  test() {
+    return this.http.get<any>(this.url.all, {})
+      .subscribe(
+        res => console.log(res),
+        err => console.error(err)
+      )
   }
 }
