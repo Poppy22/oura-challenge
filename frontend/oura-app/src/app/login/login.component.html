@@ -1,5 +1,14 @@
-<input [(ngModel)]="loginData.username" type="text" name="email">
-<input [(ngModel)]="loginData.password" type="password" name="password">
-<button (click)="loginUser()">Login</button>
-<button (click)="logoutUser()">Logout</button>
-<button (click)="test()">testing stuff</button>
+<div *ngIf="!newRegistration">
+    <input [(ngModel)]="loginData.username" type="text" name="email">
+    <input [(ngModel)]="loginData.password" type="password" name="password">
+    <button (click)="loginUser()">Login</button>
+    <button (click)="toggleRegistration()">No account? Register</button>
+</div>
+
+
+<div *ngIf="newRegistration">
+    <input [(ngModel)]="registerData.username" type="text" name="email">
+    <input [(ngModel)]="registerData.password" type="password" name="password">
+    <button (click)="registerUser()">Register</button>
+    <button (click)="toggleRegistration()">Already registered? Login</button>
+</div>

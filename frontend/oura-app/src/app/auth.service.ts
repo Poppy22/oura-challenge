@@ -23,14 +23,18 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  register(user: { username: string, password: string }) {
+    return this.http.post<any>(this.url.register, user)
+      .subscribe(
+        res => this.saveTokens(res),
+        err => console.error(err)
+      );
+  }
+
   login(user: { username: string, password: string }) {
     return this.http.post<any>(this.url.login, user)
       .subscribe(
-        res => {
-          localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
-          localStorage.setItem(this.REFRESH_TOKEN, res.data.refresh_token);
-          this.router.navigate(['']);
-        },
+        res => this.saveTokens(res),
         err => console.error(err)
       );
   }
@@ -52,6 +56,8 @@ export class AuthService {
       }));
   }
 
+  /*** Utility functions ***/
+
   getToken(url: string) {
     if (this.urlsNeedRefresh.includes(url)) {
       return this.getRefreshToken();
@@ -71,16 +77,15 @@ export class AuthService {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
 
+  saveTokens(res) {
+    localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
+    localStorage.setItem(this.REFRESH_TOKEN, res.data.refresh_token);
+    this.router.navigate(['']);
+  }
+
   removeTokens() {
     localStorage.removeItem(this.ACCESS_TOKEN);
     localStorage.removeItem(this.REFRESH_TOKEN);
-  }
-
-  test() {
-    return this.http.get<any>(this.url.all, {})
-      .subscribe(
-        res => console.log(res),
-        err => console.error(err)
-      )
+    this.router.navigate(['login']);
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,17 +9,19 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   loginData = { username: '', password: '' };
+  registerData = { username: '', password: '' };
+  newRegistration = false;
 
   loginUser() {
     this.auth.login(this.loginData);
   }
 
-  logoutUser() {
-    this.auth.logout();
+  registerUser() {
+    this.auth.register(this.registerData);
   }
 
-  test() {
-    this.auth.test();
+  toggleRegistration() {
+    this.newRegistration = !this.newRegistration;
   }
 
   constructor(private auth: AuthService) { }
