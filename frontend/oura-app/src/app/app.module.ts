@@ -14,9 +14,15 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { TokenInterceptorService } from './token-interceptor.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -33,9 +39,14 @@ import { MatButtonModule } from '@angular/material/button';
     HttpClientModule,
     ChartsModule,
     BrowserAnimationsModule,
+    MatIconModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [AuthService, AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }

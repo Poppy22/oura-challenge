@@ -1,2 +1,46 @@
-<p>layout works!</p>
-<button (click)="logoutUser()">Logout</button>
+<mat-toolbar color="primary">
+    <button mat-icon-button (click)="sidenav.toggle()" aria-label="Account options">
+        <mat-icon aria-hidden="false" aria-label="Account icon">menu</mat-icon>
+    </button>
+    <span class="title">Oura app</span>
+
+    <span class="spacer"></span>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Account options">
+        <mat-icon aria-hidden="false" aria-label="Account icon">person</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>apps</mat-icon>
+            <span>My account</span>
+        </button>
+        <button mat-menu-item (click)="logoutUser()">
+            <mat-icon>power_settings_new</mat-icon>
+            <span>Logout</span>
+        </button>
+    </mat-menu>
+</mat-toolbar>
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened" [class.mat-elevation-z4]="true">
+        <mat-nav-list>
+            <a mat-list-item class="nav-item">
+                <mat-icon matListIcon>folder</mat-icon>
+                <h3 matLine> Ceva </h3>
+                <p matLine>
+                    <span> ceva -- altceva </span>
+                </p>
+            </a>
+            <a mat-list-item class="nav-item">
+                <mat-icon matListIcon>folder</mat-icon>
+                <h3 matLine> Ceva </h3>
+                <p matLine>
+                    <span> ceva -- altceva </span>
+                </p>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="sidenav-content">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
