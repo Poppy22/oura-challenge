@@ -41,14 +41,14 @@ export class TokenInterceptorService implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
-    const isLoggedIn : boolean = this.auth.loggedIn();
-    const isApiUrl : boolean = request.url.startsWith(environment.baseUrl);
+    const isLoggedIn: boolean = this.auth.loggedIn();
+    const isApiUrl: boolean = request.url.startsWith(environment.baseUrl);
     if (isLoggedIn && isApiUrl) {
       request = this.addToken(request, this.auth.getToken(request.url));
     }
 
     return next.handle(request).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && error.status === 401) {
+      if (error instanceof HttpErrorResponse && error.status === 401 && this.auth.notIntercepted(request.url)) {
         return this.handle401Error(request, next);
       } else {
         return throwError(error);

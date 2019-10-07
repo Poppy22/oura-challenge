@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,16 +9,35 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  loginData = { username: '', password: '' };
-  registerData = { username: '', password: '' };
   newRegistration = false;
 
-  loginUser() {
-    this.auth.login(this.loginData);
-  }
+  registerForm = new FormGroup({
+    username: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
+    password: new FormControl(''),
+  });
+
+  loginForm = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl(''),
+  });
 
   registerUser() {
-    this.auth.register(this.registerData);
+    this.auth.register(this.registerForm.value, err => {
+      this.registerForm.get('username').setErrors({ existingUsername: err.error.msg });
+    });
+  }
+
+  loginUser() {
+    this.auth.login(this.loginForm.value, err => {
+      if (err.status === 404) {
+        this.loginForm.get('username').setErrors({ usernameNotFound: err.error.msg });
+      } else {
+        this.loginForm.get('password').setErrors({ wrongPassword: err.error.msg });
+      }
+    });
   }
 
   toggleRegistration() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
@@ -20,22 +20,23 @@ export class AuthService {
   public REFRESH_TOKEN = 'refresh_token';
 
   private urlsNeedRefresh = [this.url.logout, this.url.tokenRefresh];
+  private urlNoIntercept = [this.url.login];
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  register(user: { username: string, password: string }) {
+  register(user: { username: string, password: string }, callback: (err: any) => void) {
     return this.http.post<any>(this.url.register, user)
       .subscribe(
         res => this.saveTokens(res),
-        err => console.error(err)
+        err => callback(err)
       );
   }
 
-  login(user: { username: string, password: string }) {
-    return this.http.post<any>(this.url.login, user)
+  login(user: { username: string, password: string }, callback: (err: any) => void) {
+    return this.http.post(this.url.login, user)
       .subscribe(
         res => this.saveTokens(res),
-        err => console.error(err)
+        err => callback(err)
       );
   }
 
@@ -87,5 +88,9 @@ export class AuthService {
     localStorage.removeItem(this.ACCESS_TOKEN);
     localStorage.removeItem(this.REFRESH_TOKEN);
     this.router.navigate(['login']);
+  }
+
+  notIntercepted(url) {
+    return !this.urlNoIntercept.includes(url);
   }
 }
