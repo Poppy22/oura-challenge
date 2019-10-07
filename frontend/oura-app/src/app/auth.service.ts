@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
@@ -20,18 +20,23 @@ export class AuthService {
   public REFRESH_TOKEN = 'refresh_token';
 
   private urlsNeedRefresh = [this.url.logout, this.url.tokenRefresh];
+  private urlNoIntercept = [this.url.login];
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  login(user: { username: string, password: string }) {
-    return this.http.post<any>(this.url.login, user)
+  register(user: { username: string, password: string }, callback: (err: any) => void) {
+    return this.http.post<any>(this.url.register, user)
       .subscribe(
-        res => {
-          localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
-          localStorage.setItem(this.REFRESH_TOKEN, res.data.refresh_token);
-          this.router.navigate(['']);
-        },
-        err => console.error(err)
+        res => this.saveTokens(res),
+        err => callback(err)
+      );
+  }
+
+  login(user: { username: string, password: string }, callback: (err: any) => void) {
+    return this.http.post(this.url.login, user)
+      .subscribe(
+        res => this.saveTokens(res),
+        err => callback(err)
       );
   }
 
@@ -52,6 +57,8 @@ export class AuthService {
       }));
   }
 
+  /*** Utility functions ***/
+
   getToken(url: string) {
     if (this.urlsNeedRefresh.includes(url)) {
       return this.getRefreshToken();
@@ -71,16 +78,19 @@ export class AuthService {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
 
+  saveTokens(res) {
+    localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
+    localStorage.setItem(this.REFRESH_TOKEN, res.data.refresh_token);
+    this.router.navigate(['']);
+  }
+
   removeTokens() {
     localStorage.removeItem(this.ACCESS_TOKEN);
     localStorage.removeItem(this.REFRESH_TOKEN);
+    this.router.navigate(['login']);
   }
 
-  test() {
-    return this.http.get<any>(this.url.all, {})
-      .subscribe(
-        res => console.log(res),
-        err => console.error(err)
-      )
+  notIntercepted(url) {
+    return !this.urlNoIntercept.includes(url);
   }
 }
