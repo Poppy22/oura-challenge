@@ -15,7 +15,8 @@ export class AuthService {
     logout: environment.baseUrl + '/logout',
     tokenRefresh: environment.baseUrl + '/token/refresh',
     user: environment.baseUrl + '/user/',
-    sleep: environment.baseUrl + '/sleep'
+    sleep: environment.baseUrl + '/sleep',
+    homepage: environment.baseUrl + '/homepage'
   };
 
   public ACCESS_TOKEN = 'access_token';
@@ -74,6 +75,10 @@ export class AuthService {
 
   getSleepData(startDate: string, endDate: string) {
     return this.http.get<any>(`${this.url.sleep}/${startDate}/${endDate}`);
+  }
+
+  getHomepageData() {
+    return this.http.get<any>(this.url.homepage);
   }
 
   /*** Utility functions ***/

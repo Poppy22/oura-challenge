@@ -8,7 +8,7 @@
                 <mat-card-subtitle>This month's best average</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                <span class="mat-display-1">Wednesday 75.2</span>
+                <span class="mat-display-1">{{data.best_day}}</span>
             </mat-card-content>
             <mat-card-actions>
                 <button mat-button [disabled]="true">More</button>
@@ -23,7 +23,7 @@
                 <mat-card-subtitle>The overall performance this month</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                <span class="mat-display-1">Wednesday 75.2</span>
+                <span class="mat-display-1">{{data.performance}}</span>
             </mat-card-content>
             <mat-card-actions>
                 <button mat-button [disabled]="true">More</button>
@@ -34,11 +34,11 @@
         <mat-card class="example-card">
             <mat-card-header>
                 <div mat-card-avatar class="hero-icon-3"></div>
-                <mat-card-title>Last night</mat-card-title>
+                <mat-card-title>Last night'score</mat-card-title>
                 <mat-card-subtitle>You slept like a log</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                <span class="mat-display-1">Wednesday 75.2</span>
+                <span class="mat-display-1">{{data.weekday}}: {{data.score}} / 100</span>
             </mat-card-content>
             <mat-card-actions>
                 <button mat-button [disabled]="true">More</button>
@@ -46,3 +46,23 @@
         </mat-card>
     </div>
 </div>
+<mat-grid-list cols="10" rowHeight="100px">
+    <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-card class="full-width chart-card">
+            <mat-card-content>
+                <div class="pie-chart">
+                    <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                        [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
+                    </canvas>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="6" [rowspan]="1">
+        <mat-card class="full-width chart-card">
+            <mat-card-content>
+                a
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>
