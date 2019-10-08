@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+from datetime import datetime
 
 ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
@@ -13,6 +14,12 @@ TYPE_READINESS = "v1/readiness"
 envrc = "../../.envrc"
 ACCESS_TOKEN_KEY = "ACCESS_TOKEN"
 REFRESH_TOKEN_KEY = "REFRESH_TOKEN"
+
+
+def read_data():
+    with open('input.json') as json_file:
+        data = json.load(json_file)
+        return data['sleep']
 
 
 def refresh_access_token():
@@ -56,6 +63,36 @@ def build_url(url_type, start_date, end_date=None):
 def get_sleep_data(start_date, end_date=None):
     url = build_url(TYPE_SLEEP, start_date, end_date)
     return requests.get(url, headers={'Authorization': "Bearer " + ACCESS_TOKEN}).json()
+
+
+def get_sleep_data_mock(all_data, start_date, end_date=None):
+    result = []
+    start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    if end_date:
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+    for d in all_data:
+        if datetime.strptime(d['summary_date'], "%Y-%m-%d") >= start_date:
+            if end_date:
+                if datetime.strptime(d['summary_date'], "%Y-%m-%d") <= end_date:
+                    result.append(d)
+            else:
+                result.append(d)
+    return result
+
+
+def get_piechart_data(last_data):
+    return {'rem': last_data['rem'],
+            'deep': last_data['deep'],
+            'light': last_data['light'],
+            'awake': last_data['awake']}
+
+
+def compute_performance(all_data):
+    return 0
+
+
+def compute_best_day(all_data):
+    return 0
 
 
 def get_activity_data(start_date, end_date=None):
