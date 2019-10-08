@@ -1,15 +1,19 @@
 .stats-container {
     display: flex;
+    flex-flow: row wrap;
+    align-content: center;
+    justify-content: space-around;
 }
 
 .stat {
     flex: 1;
     padding: 12px;
+    min-width: 300px;
+    max-width: 420px;
 }
 
 .example-card {
-    width: 100%;
-    max-width: 400px;
+    display: block;
 }
 
 .hero-icon-1 {

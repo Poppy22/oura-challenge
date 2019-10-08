@@ -14,7 +14,8 @@ export class AuthService {
     login: environment.baseUrl + '/login',
     logout: environment.baseUrl + '/logout',
     tokenRefresh: environment.baseUrl + '/token/refresh',
-    user: environment.baseUrl + '/user/'
+    user: environment.baseUrl + '/user/',
+    sleep: environment.baseUrl + '/sleep'
   };
 
   public ACCESS_TOKEN = 'access_token';
@@ -64,11 +65,15 @@ export class AuthService {
   }
 
   editUser(userData) {
-    return this.http.post<any>(this.url.user + this.getUsername(), userData);
+    return this.http.put<any>(this.url.user + this.getUsername(), userData);
   }
 
   deleteUser() {
     return this.http.delete<any>(this.url.user + this.getUsername());
+  }
+
+  getSleepData(startDate: string, endDate: string) {
+    return this.http.get<any>(`${this.url.sleep}/${startDate}/${endDate}`);
   }
 
   /*** Utility functions ***/

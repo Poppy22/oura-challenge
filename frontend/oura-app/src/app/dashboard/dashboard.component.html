@@ -3,51 +3,46 @@
     <mat-card-subtitle>Use the settings below to update the graph</mat-card-subtitle>
     <mat-card-content>
         <mat-form-field>
-            <mat-label>Graph type</mat-label>
-            <mat-select>
+            <mat-label>Primary graph type</mat-label>
+            <mat-select [(value)]="primaryGraph">
                 <mat-option *ngFor="let type of types" [value]="type.value">
                     {{type.viewValue}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field class="spaced-field">
-            <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a start date">
+            <mat-label>Secondary graph type</mat-label>
+            <mat-select [(value)]="secondaryGraph">
+                <mat-option *ngFor="let type of types" [value]="type.value">
+                    {{type.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="spaced-field">
+            <input matInput [matDatepicker]="startDatePicker" [formControl]="startDateForm"
+                placeholder="Choose a start date">
             <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #startDatePicker></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="spaced-field">
-            <input matInput [matDatepicker]="endDatePicker" [formControl]="date" placeholder="Choose an end date">
+            <input matInput [matDatepicker]="endDatePicker" [formControl]="endDateForm"
+                placeholder="Choose an end date">
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
 
-        <button mat-flat-button color="primary" (click)="update()" class="spaced-field">Update</button>
+        <button mat-flat-button color="primary" [disabled]="startDateForm.pristine" (click)="update()"
+            class="spaced-field">Update</button>
     </mat-card-content>
 </mat-card>
-<mat-card>
+<mat-card class="chart-card" *ngIf="chartVisible">
     <div class="flex">
         <div class="flex-item">
-            <div style="display: block;">
-                <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels"
+            <div class="canvas-container">
+                <canvas baseChart width="500" height="500" [datasets]="lineChartData" [labels]="lineChartLabels"
                     [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
-                    [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
-                    (chartClick)="chartClicked($event)"></canvas>
+                    [chartType]="lineChartType"></canvas>
             </div>
-        </div>
-        <div class="flex-item">
-            <table class="table table-responsive table-condensed">
-                <tr>
-                    <th *ngFor="let label of lineChartLabels">{{label}}</th>
-                </tr>
-                <tr *ngFor="let d of lineChartData; let i=index" [class]="'line-'+i">
-                    <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
-                </tr>
-            </table>
-            <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
-            <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
-            <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
-            <button mat-button mat-raised-button color="primary" (click)="hideOne()">Toggle Series B</button>
-            <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
         </div>
     </div>
 </mat-card>

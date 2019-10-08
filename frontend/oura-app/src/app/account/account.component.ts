@@ -28,7 +28,10 @@ export class AccountComponent implements OnInit {
   deleteAccount() {
     this.auth.deleteUser()
       .subscribe(
-        res => console.log(res),
+        res => {
+          console.log(res);
+          this.auth.removeTokens();
+        },
         err => console.error(err)
       );
   }
