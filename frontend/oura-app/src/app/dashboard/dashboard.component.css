@@ -1,0 +1,28 @@
+.controls-card {
+    margin-bottom: 24px;
+    display: inline-block;
+}
+
+.spaced-field {
+    margin-left: 16px;
+}
+
+.chart-card {
+    margin-bottom: 200px;
+}
+
+.flex {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.flex-item {
+    flex-basis: 1;
+}
+
+.canvas-container {
+    position: relative;
+    height: 80vh;
+    width: 120vh;
+}

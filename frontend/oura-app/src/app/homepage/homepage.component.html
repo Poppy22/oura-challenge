@@ -1,1 +1,68 @@
-<p>homepage works!</p>
+<h1 class="mat-h1">Last 30 days' stats</h1>
+<div class="stats-container">
+    <div class="stat">
+        <mat-card class="block">
+            <mat-card-header>
+                <div mat-card-avatar class="hero-icon-1"></div>
+                <mat-card-title>Best Average</mat-card-title>
+                <mat-card-subtitle>This month's best average</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <span class="mat-display-1">{{data.best_day}}</span>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [disabled]="true">More</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="stat">
+        <mat-card class="block">
+            <mat-card-header>
+                <div mat-card-avatar class="hero-icon-2"></div>
+                <mat-card-title>Performance</mat-card-title>
+                <mat-card-subtitle>The overall performance this month</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <span class="mat-display-1">{{data.performance}}</span>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [disabled]="true">More</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="stat">
+        <mat-card class="block">
+            <mat-card-header>
+                <div mat-card-avatar class="hero-icon-3"></div>
+                <mat-card-title>Last night'score</mat-card-title>
+                <mat-card-subtitle>You slept like a log</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <span class="mat-display-1">{{data.weekday}}: {{data.score}} / 100</span>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [disabled]="true">More</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
+<div class="card-container">
+    <mat-card class="piechart-card">
+        <mat-card-content>
+            <div class="pie-chart">
+                <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                    [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
+                </canvas>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="hipogram">
+        <mat-card-content>
+            <div>
+                <canvas baseChart [datasets]="scatterChartData" [options]="scatterChartOptions"
+                    [labels]="scatterChartLabels" [chartType]="scatterChartType">
+                </canvas>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,54 @@
+.stats-container {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.stat {
+    flex: 1;
+    padding: 12px;
+    min-width: 300px;
+    max-width: 420px;
+}
+
+.block {
+    display: block;
+}
+
+.hero-icon-1 {
+    background-image: url('../../assets/img/hero-icon-1.png');
+    background-size: cover;
+}
+
+.hero-icon-2 {
+    background-image: url('../../assets/img/hero-icon-2.png');
+    background-size: cover;
+}
+
+.hero-icon-3 {
+    background-image: url('../../assets/img/hero-icon-3.png');
+    background-size: cover;
+}
+
+.hero-icon-4 {
+    background-image: url('../../assets/img/hero-icon-4.png');
+    background-size: cover;
+}
+
+.card-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin-bottom: 200px;
+}
+
+.piechart-card {
+    margin: 12px;
+    flex: 0.4;
+}
+
+.hipogram {
+    margin: 12px;
+    flex: 0.6;
+}
