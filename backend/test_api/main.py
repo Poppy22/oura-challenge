@@ -13,7 +13,9 @@ from flask_restful import Resource, Api
 from marshmallow import Schema, fields, ValidationError
 from passlib.hash import pbkdf2_sha256 as sha256
 
-from oura_interface import get_sleep_data
+from datetime import datetime
+import calendar
+import oura_interface as oura
 
 app = Flask(__name__)
 CORS(app)
@@ -34,17 +36,17 @@ logging.basicConfig(filename='../test_api.log', level=logging.INFO,
 
 
 def get_db(db_file):
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = shelve.open(os.path.join(os.path.dirname(__file__), "../" + db_file))
-    return db
+    return g.setdefault('_database' + db_file, default=shelve.open(
+        os.path.join(os.path.dirname(__file__), "../" + db_file)
+    ))
 
 
 @app.teardown_appcontext
 def teardown_db(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+    for db_file in [DB_USER, DB_REV_TOKEN]:
+        db = getattr(g, '_database' + db_file, None)
+        if db is not None:
+            db.close()
 
 
 class UserSchema(Schema):
@@ -71,13 +73,21 @@ def check_if_token_in_blacklist(decrypted_token):
 
 
 class User(Resource):
+    @jwt_required
     def get(self, username):
+        if get_jwt_identity() != username:
+            return {'msg': 'Unauthorized', 'data': None}, 401
+
         db = get_db(DB_USER)
         if username not in db:
             return {'msg': 'User {} not found'.format(username), 'data': None}, 404
         return {'msg': 'User found', 'data': db[username]}, 200
 
+    @jwt_required
     def put(self, username):
+        if get_jwt_identity() != username:
+            return {'msg': 'Unauthorized', 'data': None}, 401
+
         db = get_db(DB_USER)
         if username not in db:
             return {'msg': 'User {} not found'.format(username), 'data': None}, 404
@@ -92,7 +102,11 @@ class User(Resource):
             logging.error("Validation error " + str(err.messages))
             return {'msg': 'Validation error', 'data': err.messages}, 400
 
+    @jwt_required
     def delete(self, username):
+        if get_jwt_identity() != username:
+            return {'msg': 'Unauthorized', 'data': None}, 401
+
         db = get_db(DB_USER)
         if username not in db:
             return {'msg': 'User {} not found'.format(username), 'data': None}, 201
@@ -182,9 +196,33 @@ class TokenRefresh(Resource):
 
 
 class SleepData(Resource):
-    @jwt_required
+    # @jwt_required
+    def get(self, start_date, end_date):
+        # return {'msg': 'Request sleep data', 'data': get_sleep_data('2019-01-01')}, 200
+        all_data = oura.read_data()
+        return {'msg': 'Request sleep data', 'data': oura.get_sleep_data_mock(all_data, start_date, end_date)}, 200
+
+
+class Dashboard(Resource):
     def get(self):
-        return {'msg': 'Request sleep data', 'data': get_sleep_data('2019-01-01')}, 200
+        all_data = oura.read_data()
+        last_data = all_data[len(all_data) - 1]
+
+        # create dashboard dictionary
+        dashboard = {'hypnogram_5min': last_data['hypnogram_5min'], 'piechart': {}}
+        dashboard['score'] = last_data['score']
+        last_day = datetime.strptime(last_data['summary_date'], '%Y-%m-%d')
+        dashboard['weekday'] = calendar.day_name[last_day.weekday()]
+
+        # get data for piechart
+        dashboard['piechart'] = oura.get_piechart_data(last_data)
+
+        # compute monthly performance
+        dashboard['performance'] = oura.compute_performance(all_data)
+
+        # compute best day this month
+        dashboard['best_day'] = oura.compute_best_day(all_data)
+        return {'msg': 'Request sleep data', 'data': dashboard}, 200
 
 
 api.add_resource(User, '/user/<string:username>')
@@ -193,8 +231,8 @@ api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(TokenRefresh, '/token/refresh')
-api.add_resource(SleepData, '/sleep')
-
+api.add_resource(SleepData, '/sleep/<string:start_date>/<string:end_date>')
+api.add_resource(Dashboard, '/homepage')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
