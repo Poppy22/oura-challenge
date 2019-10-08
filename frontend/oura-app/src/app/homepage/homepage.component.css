@@ -1,0 +1,33 @@
+.stats-container {
+    display: flex;
+}
+
+.stat {
+    flex: 1;
+    padding: 12px;
+}
+
+.example-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.hero-icon-1 {
+    background-image: url('../../assets/img/hero-icon-1.png');
+    background-size: cover;
+}
+
+.hero-icon-2 {
+    background-image: url('../../assets/img/hero-icon-2.png');
+    background-size: cover;
+}
+
+.hero-icon-3 {
+    background-image: url('../../assets/img/hero-icon-3.png');
+    background-size: cover;
+}
+
+.hero-icon-4 {
+    background-image: url('../../assets/img/hero-icon-4.png');
+    background-size: cover;
+}

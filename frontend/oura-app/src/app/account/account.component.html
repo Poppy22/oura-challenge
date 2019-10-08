@@ -1,0 +1,33 @@
+<mat-card class="account-card">
+    <mat-card-title>User account settings</mat-card-title>
+    <mat-card-subtitle>Change account data or password</mat-card-subtitle>
+    <mat-card-content>
+        <form [formGroup]="userData" class="full-width">
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>name</mat-label>
+                <input matInput #message maxlength="512" type="text" name="name" formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>username</mat-label>
+                <input matInput #message maxlength="512" type="text" name="username" formControlName="username">
+            </mat-form-field>
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>password</mat-label>
+                <input matInput #message maxlength="512" type="password" name="password" formControlName="password">
+                <mat-hint align="start"><strong>Set only if you want to change password</strong> </mat-hint>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button color="primary" [disabled]="userData.pristine" (click)="editAccount()">Edit
+            account</button>
+    </mat-card-actions>
+    <mat-card-title>Delete account</mat-card-title>
+    <mat-card-subtitle>Are you sure you want to delete your account?</mat-card-subtitle>
+    <mat-card-content>
+        <mat-checkbox name="confirmation" [(ngModel)]="confirmed">Yes, I am sure</mat-checkbox>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="warn" [disabled]="!confirmed" (click)="deleteAccount">Delete account</button>
+    </mat-card-actions>
+</mat-card>

@@ -1,9 +1,4 @@
-.container {
-    position: relative;
-    height: 100%;
-}
-
-.login-card {
+.account-card {
     max-width: 400px;
     margin: 0 auto;
     position: relative;

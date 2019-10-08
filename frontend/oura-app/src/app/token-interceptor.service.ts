@@ -48,7 +48,8 @@ export class TokenInterceptorService implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && error.status === 401 && this.auth.notIntercepted(request.url)) {
+      if (this.auth.toIntercept(request.url) && error instanceof HttpErrorResponse &&
+        error.status === 401 && error.error.msg && error.error.msg === 'Token has expired') {
         return this.handle401Error(request, next);
       } else {
         return throwError(error);

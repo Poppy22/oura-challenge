@@ -13,11 +13,13 @@ export class AuthService {
     register: environment.baseUrl + '/register',
     login: environment.baseUrl + '/login',
     logout: environment.baseUrl + '/logout',
-    tokenRefresh: environment.baseUrl + '/token/refresh'
+    tokenRefresh: environment.baseUrl + '/token/refresh',
+    user: environment.baseUrl + '/user/'
   };
 
   public ACCESS_TOKEN = 'access_token';
   public REFRESH_TOKEN = 'refresh_token';
+  public USERNAME = 'user';
 
   private urlsNeedRefresh = [this.url.logout, this.url.tokenRefresh];
   private urlNoIntercept = [this.url.login];
@@ -27,7 +29,7 @@ export class AuthService {
   register(user: { username: string, password: string }, callback: (err: any) => void) {
     return this.http.post<any>(this.url.register, user)
       .subscribe(
-        res => this.saveTokens(res),
+        res => this.saveTokens(res, user.username),
         err => callback(err)
       );
   }
@@ -35,7 +37,7 @@ export class AuthService {
   login(user: { username: string, password: string }, callback: (err: any) => void) {
     return this.http.post(this.url.login, user)
       .subscribe(
-        res => this.saveTokens(res),
+        res => this.saveTokens(res, user.username),
         err => callback(err)
       );
   }
@@ -57,6 +59,18 @@ export class AuthService {
       }));
   }
 
+  getUser() {
+    return this.http.get<any>(this.url.user + this.getUsername());
+  }
+
+  editUser(userData) {
+    return this.http.post<any>(this.url.user + this.getUsername(), userData);
+  }
+
+  deleteUser() {
+    return this.http.delete<any>(this.url.user + this.getUsername());
+  }
+
   /*** Utility functions ***/
 
   getToken(url: string) {
@@ -64,6 +78,10 @@ export class AuthService {
       return this.getRefreshToken();
     }
     return this.getAccessToken();
+  }
+
+  getUsername() {
+    return localStorage.getItem(this.USERNAME);
   }
 
   loggedIn() {
@@ -78,19 +96,21 @@ export class AuthService {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
 
-  saveTokens(res) {
+  saveTokens(res, username: string) {
     localStorage.setItem(this.ACCESS_TOKEN, res.data.access_token);
     localStorage.setItem(this.REFRESH_TOKEN, res.data.refresh_token);
+    localStorage.setItem(this.USERNAME, username);
     this.router.navigate(['']);
   }
 
   removeTokens() {
     localStorage.removeItem(this.ACCESS_TOKEN);
     localStorage.removeItem(this.REFRESH_TOKEN);
+    localStorage.removeItem(this.USERNAME);
     this.router.navigate(['login']);
   }
 
-  notIntercepted(url) {
+  toIntercept(url: string) {
     return !this.urlNoIntercept.includes(url);
   }
 }

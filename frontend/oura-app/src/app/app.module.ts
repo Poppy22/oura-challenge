@@ -17,19 +17,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
     HomepageComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
@@ -41,12 +47,14 @@ import { MatListModule } from '@angular/material/list';
     BrowserAnimationsModule,
     MatIconModule,
     MatInputModule,
+    MatCheckboxModule,
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
     MatMenuModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatGridListModule
   ],
   providers: [AuthService, AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }

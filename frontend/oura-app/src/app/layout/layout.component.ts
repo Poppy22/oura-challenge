@@ -7,7 +7,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit {
-  opened = true;
+  opened = false;
 
   logoutUser() {
     this.auth.logout();
