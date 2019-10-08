@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { ChartType, ChartOptions } from 'chart.js';
+import { ChartType, ChartOptions, ChartDataSets, ChartPoint } from 'chart.js';
 import { Label } from 'ng2-charts';
 
 @Component({
@@ -29,14 +29,6 @@ export class HomepageComponent implements OnInit {
     responsive: true,
     legend: {
       position: 'top',
-    },
-    plugins: {
-      datalabels: {
-        formatter: (value, ctx) => {
-          const label = ctx.chart.data.labels[ctx.dataIndex];
-          return label;
-        },
-      },
     }
   };
   public pieChartLabels: Label[] = ['REM', 'Deep sleep', 'Light Sleep', 'Awake'];
@@ -46,20 +38,58 @@ export class HomepageComponent implements OnInit {
   public pieChartColors = [
     {
       backgroundColor: [
-        'rgba(209, 196, 233, 0.3)',
-        'rgba(178, 235, 242, 0.3)',
-        'rgba(0, 255, 0, 0.3)',
-        'rgba(255, 0, 0, 0.3)'
+        'rgba(103, 58, 183, 0.8)',
+        'rgba(3, 169, 244, 0.8)',
+        'rgba(76, 175, 80, 0.8)',
+        'rgba(244, 67, 54, 0.8)'
       ],
     },
   ];
+
+
+  // Scatter chart
+  public scatterChartOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          suggestedMin: 0.5,
+          suggestedMax: 4.5
+        }
+      }]
+    }
+  };
+
+  public scatterChartData: ChartDataSets[] = [
+    {
+      data: [],
+      label: 'Series A',
+      pointRadius: 6,
+      backgroundColor: 'rgba(244, 67, 54, 0.8)'
+    }, {
+      data: [],
+      label: 'Series B',
+      pointRadius: 8,
+      backgroundColor: 'rgba(76, 175, 80, 0.8)'
+    }, {
+      data: [],
+      label: 'Series C',
+      pointRadius: 8,
+      backgroundColor: 'rgba(3, 169, 244, 0.8)'
+    }, {
+      data: [],
+      label: 'Series D',
+      pointRadius: 10,
+      backgroundColor: 'rgba(103, 58, 183, 0.8)'
+    }
+  ];
+  public scatterChartType: ChartType = 'scatter';
 
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
     this.auth.getHomepageData().subscribe(
       res => {
-        console.log(res.data);
         this.data = res.data;
         this.pieChartData = [
           this.data.piechart.rem,
@@ -67,6 +97,13 @@ export class HomepageComponent implements OnInit {
           this.data.piechart.light,
           this.data.piechart.awake
         ];
+
+        let step = 1;
+        [...this.data.hypnogram_5min].forEach(h => {
+          const hNum = parseInt(h, 10);
+          (this.scatterChartData[hNum - 1].data as ChartPoint[]).push({ x: step, y: hNum });
+          step++;
+        });
       },
       err => console.error(err)
     );
