@@ -2,6 +2,7 @@ import os
 import requests
 import json
 from datetime import datetime
+import calendar
 
 ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
@@ -88,11 +89,50 @@ def get_piechart_data(last_data):
 
 
 def compute_performance(all_data):
-    return 0
+    if len(all_data) < 30:
+        return "Not enough data yet. Minimum 30 days needed."
+
+    last_30_days = all_data[-30:]
+    last_30_days_score = 0
+    for day in last_30_days:
+        last_30_days_score += day['score']
+    last_30_days_score /= 30
+
+    if len(all_data) < 60:
+        return "%.2f" % last_30_days_score
+
+    prev_30_days = all_data[-60:-30]
+    prev_30_days_score = 0
+    for day in prev_30_days:
+        prev_30_days_score += day['score']
+    prev_30_days_score /= 30
+
+    return "%.2f" % (100 * last_30_days_score / prev_30_days_score - 100)
 
 
 def compute_best_day(all_data):
-    return 0
+    if len(all_data) < 30:
+        return "Not enough data yet. Minimum 30 days needed."
+
+    last_30_days = all_data[-30:]
+    weekdays_average = {'Monday': [],
+                        'Tuesday': [],
+                        'Wednesday': [],
+                        'Thursday': [],
+                        'Friday': [],
+                        'Saturday': [],
+                        'Sunday': []}
+
+    for day in last_30_days:
+        weekday = calendar.day_name[datetime.strptime(day['summary_date'], '%Y-%m-%d').weekday()]
+        weekdays_average[weekday].append(day['score'])
+
+    for day in weekdays_average:
+        weekdays_average[day] = sum(weekdays_average[day]) / len(weekdays_average[day])
+
+    best_day = max(weekdays_average)
+    return {"weekday": best_day,
+            "score": weekdays_average[best_day]}
 
 
 def get_activity_data(start_date, end_date=None):
