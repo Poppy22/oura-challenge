@@ -97,13 +97,12 @@ class User(Resource):
 
         schema = UserSchema()
         try:
-            updated_fields = {}
+            updated_fields = db[username]
             for key in request.json:
                 if len(request.json[key]) > 0:
                     updated_fields[key] = request.json[key]
-
-            result = schema.load(updated_fields)
-            db[username] = result
+            
+            db[username] = updated_fields
             return {'msg': 'User {} modified'.format(username), 'data': None}, 200
 
         except ValidationError as err:
