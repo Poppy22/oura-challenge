@@ -20,7 +20,10 @@ export class HomepageComponent implements OnInit {
     score: 0,
     weekday: '',
     performance: 0,
-    best_day: 0
+    best_day: {
+      weekday: '',
+      score: 0
+    }
   };
 
 
