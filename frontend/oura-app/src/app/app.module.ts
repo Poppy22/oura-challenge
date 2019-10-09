@@ -31,6 +31,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatListModule,
     MatGridListModule,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltipModule
   ],
   providers: [AuthService, AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }

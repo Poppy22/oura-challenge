@@ -1,9 +1,19 @@
+.card-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .account-card {
+    flex: 1;
     max-width: 400px;
     margin: 0 auto;
-    position: relative;
+    /* position: relative;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+    transform: translateY(-50%); */
 }

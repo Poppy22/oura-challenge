@@ -12,6 +12,26 @@
     max-width: 420px;
 }
 
+.more-info {
+    color: white;
+    background: rgba(158, 158, 158, 1);
+    position: absolute;
+    right: 20px;
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-weight: 500;
+}
+
+.custom-tooltip {
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0;
+}
+
 .text-red {
     color: rgba(244, 67, 54, 1)
 }
@@ -46,17 +66,21 @@
 
 .card-container {
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: row;
     justify-content: center;
     margin-bottom: 200px;
 }
 
+.height-full {
+    height: 100%;
+}
+
 .piechart-card {
-    margin: 12px;
+    padding: 12px;
     flex: 0.4;
 }
 
-.hipogram {
-    margin: 12px;
+.hipogram-card {
+    padding: 12px;
     flex: 0.6;
 }

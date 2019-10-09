@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ChartType, ChartOptions, ChartDataSets, ChartPoint } from 'chart.js';
 import { Label } from 'ng2-charts';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-homepage',
@@ -22,10 +23,21 @@ export class HomepageComponent implements OnInit {
     performance: 0,
     best_day: {
       weekday: '',
-      score: 0
+      score: 0,
+      Monday: 0,
+      Tuesday: 0,
+      Wednesday: 0,
+      Thursday: 0,
+      Friday: 0,
+      Saturday: 0,
+      Sunday: 0,
+      best_day_name: '',
+      best_day_score: 0
     }
   };
 
+  tooltipPosition: TooltipPosition = 'left';
+  lastNightMessage = '';
 
   // Pie chart
   public pieChartOptions: ChartOptions = {
@@ -66,24 +78,24 @@ export class HomepageComponent implements OnInit {
   public scatterChartData: ChartDataSets[] = [
     {
       data: [],
-      label: 'Series A',
-      pointRadius: 6,
-      backgroundColor: 'rgba(244, 67, 54, 0.8)'
-    }, {
-      data: [],
-      label: 'Series B',
-      pointRadius: 8,
-      backgroundColor: 'rgba(76, 175, 80, 0.8)'
-    }, {
-      data: [],
-      label: 'Series C',
-      pointRadius: 8,
+      label: 'Deep sleep',
+      pointRadius: 5,
       backgroundColor: 'rgba(3, 169, 244, 0.8)'
     }, {
       data: [],
-      label: 'Series D',
-      pointRadius: 10,
+      label: 'Light sleep',
+      pointRadius: 5,
+      backgroundColor: 'rgba(76, 175, 80, 0.8)'
+    }, {
+      data: [],
+      label: 'REM',
+      pointRadius: 5,
       backgroundColor: 'rgba(103, 58, 183, 0.8)'
+    }, {
+      data: [],
+      label: 'Awake',
+      pointRadius: 5,
+      backgroundColor: 'rgba(244, 67, 54, 0.8)'
     }
   ];
   public scatterChartType: ChartType = 'scatter';
@@ -107,6 +119,14 @@ export class HomepageComponent implements OnInit {
           (this.scatterChartData[hNum - 1].data as ChartPoint[]).push({ x: step, y: hNum });
           step++;
         });
+
+        if (this.data.score > 70) {
+          this.lastNightMessage = 'You slept like a log';
+        } else if (this.data.score > 45) {
+          this.lastNightMessage = 'This can be improved - go to bed early';
+        } else {
+          this.lastNightMessage = 'Restless sleep';
+        }
       },
       err => console.error(err)
     );
