@@ -9,6 +9,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
 .full-width {
     width: 100%;
 }

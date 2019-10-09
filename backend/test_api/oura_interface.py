@@ -130,9 +130,20 @@ def compute_best_day(all_data):
     for day in weekdays_average:
         weekdays_average[day] = sum(weekdays_average[day]) / len(weekdays_average[day])
 
-    best_day = max(weekdays_average)
-    return {"weekday": best_day,
-            "score": weekdays_average[best_day]}
+    # compute the best score for a weekday
+    best_day = ""
+    best_score = 0
+    for key in weekdays_average:
+        if weekdays_average[key] > best_score:
+            best_day = key
+            best_score = weekdays_average[key]
+
+    for key in weekdays_average:
+        weekdays_average[key] = "%.2f" % weekdays_average[key]
+
+    weekdays_average["best_day_name"] = best_day
+    weekdays_average["best_day_score"] = "%.2f" % best_score
+    return weekdays_average
 
 
 def get_activity_data(start_date, end_date=None):
