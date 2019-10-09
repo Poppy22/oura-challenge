@@ -12,6 +12,14 @@
     max-width: 420px;
 }
 
+.text-red {
+    color: rgba(244, 67, 54, 1)
+}
+
+.text-green {
+    color: rgba(56, 142, 60, 1)
+}
+
 .block {
     display: block;
 }
