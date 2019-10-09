@@ -6,9 +6,12 @@
                 <div mat-card-avatar class="hero-icon-1"></div>
                 <mat-card-title>Best Average</mat-card-title>
                 <mat-card-subtitle>This month's best average</mat-card-subtitle>
+                <span class="more-info" matTooltipClass="custoom-tooltip"
+                    matTooltip="We carefully analyse the last 30 night sleeps, average their score and then decide on which day of the week you had the most restful sleep. Think of the activities the day before and after the sleep to figure out what makes you feel more relaxed or stressed."
+                    [matTooltipPosition]="tooltipPosition">i</span>
             </mat-card-header>
             <mat-card-content>
-                <span class="mat-display-1">{{data.best_day.weekday}}, {{data.best_day.score}}%</span>
+                <span class="mat-display-1">{{data.best_day.best_day_name}}, {{data.best_day.best_day_score}}%</span>
             </mat-card-content>
             <mat-card-actions>
                 <button mat-button [disabled]="true">More</button>
@@ -21,6 +24,9 @@
                 <div mat-card-avatar class="hero-icon-2"></div>
                 <mat-card-title>Performance</mat-card-title>
                 <mat-card-subtitle>The overall performance this month</mat-card-subtitle>
+                <span class="more-info" matTooltipClass="custoom-tooltip"
+                    matTooltip="This tells you how your sleep has improved over the last month, compared to the previous month. We average the score for the previous 30 days and check if it increased or decreased from the previous month's performance."
+                    [matTooltipPosition]="tooltipPosition">i</span>
             </mat-card-header>
             <mat-card-content>
                 <span class="mat-display-1" [ngClass]="(data.performance < 0)?'text-red':'text-green'">
@@ -35,8 +41,11 @@
         <mat-card class="block">
             <mat-card-header>
                 <div mat-card-avatar class="hero-icon-3"></div>
-                <mat-card-title>Last night'score</mat-card-title>
-                <mat-card-subtitle>You slept like a log</mat-card-subtitle>
+                <mat-card-title>Last night's score</mat-card-title>
+                <mat-card-subtitle>{{lastNightMessage}}</mat-card-subtitle>
+                <span class="more-info" matTooltipClass="custoom-tooltip"
+                    matTooltip="We track lots of data while you are asleep, but don't worry, your information is safe with us. Here you can read about an in-depth analysis of your last night's sleep."
+                    [matTooltipPosition]="tooltipPosition">i</span>
             </mat-card-header>
             <mat-card-content>
                 <span class="mat-display-1">{{data.weekday}}: {{data.score}}%</span>
@@ -48,22 +57,22 @@
     </div>
 </div>
 <div class="card-container">
-    <mat-card class="piechart-card">
-        <mat-card-content>
-            <div class="pie-chart">
+    <div class="piechart-card">
+        <mat-card class="height-full">
+            <mat-card-content>
                 <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
                     [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
                 </canvas>
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="hipogram">
-        <mat-card-content>
-            <div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="hipogram-card">
+        <mat-card class="height-full">
+            <mat-card-content>
                 <canvas baseChart [datasets]="scatterChartData" [options]="scatterChartOptions"
                     [labels]="scatterChartLabels" [chartType]="scatterChartType">
                 </canvas>
-            </div>
-        </mat-card-content>
-    </mat-card>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
