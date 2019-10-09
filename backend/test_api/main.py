@@ -36,9 +36,12 @@ logging.basicConfig(filename='../test_api.log', level=logging.INFO,
 
 
 def get_db(db_file):
-    return g.setdefault('_database' + db_file, default=shelve.open(
-        os.path.join(os.path.dirname(__file__), "../" + db_file)
-    ))
+    db = getattr(g, '_database' + db_file, None)
+    if db is None:
+        db = g.setdefault('_database' + db_file, default=shelve.open(
+            os.path.join(os.path.dirname(__file__), "../" + db_file)
+        ))
+    return db
 
 
 @app.teardown_appcontext
@@ -94,7 +97,12 @@ class User(Resource):
 
         schema = UserSchema()
         try:
-            result = schema.load(request.json)
+            updated_fields = {}
+            for key in request.json:
+                if len(request.json[key]) > 0:
+                    updated_fields[key] = request.json[key]
+
+            result = schema.load(updated_fields)
             db[username] = result
             return {'msg': 'User {} modified'.format(username), 'data': None}, 200
 
