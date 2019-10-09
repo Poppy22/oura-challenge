@@ -14,7 +14,7 @@
                 <span class="mat-display-1">{{data.best_day.best_day_name}}, {{data.best_day.best_day_score}}%</span>
             </mat-card-content>
             <mat-card-actions>
-                <button mat-button [disabled]="true">More</button>
+                <button mat-button (click)="openDialog()">More</button>
             </mat-card-actions>
         </mat-card>
     </div>

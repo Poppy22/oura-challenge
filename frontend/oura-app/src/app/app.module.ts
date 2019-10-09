@@ -8,7 +8,7 @@ import { ChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
-import { HomepageComponent } from './homepage/homepage.component';
+import { HomepageComponent, WeekdayDialog } from './homepage/homepage.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountComponent } from './account/account.component';
@@ -32,6 +32,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HomepageComponent,
     LoginComponent,
     DashboardComponent,
-    AccountComponent
+    AccountComponent,
+    WeekdayDialog
   ],
   imports: [
     BrowserModule,
@@ -63,11 +65,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatGridListModule,
     MatDatepickerModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   providers: [AuthService, AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }
   ],
+  entryComponents: [HomepageComponent, WeekdayDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

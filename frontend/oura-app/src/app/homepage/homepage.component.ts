@@ -1,8 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ChartType, ChartOptions, ChartDataSets, ChartPoint } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { TooltipPosition } from '@angular/material/tooltip';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface DialogData {
+  Monday: number;
+  Tuesday: number;
+  Wednesday: number;
+  Thursday: number;
+  Friday: number;
+  Saturday: number;
+  Sunday: number;
+}
 
 @Component({
   selector: 'app-homepage',
@@ -100,7 +111,17 @@ export class HomepageComponent implements OnInit {
   ];
   public scatterChartType: ChartType = 'scatter';
 
-  constructor(private auth: AuthService) { }
+  // Dialog settings
+  dialogData: DialogData;
+
+  openDialog(): void {
+    // tslint:disable-next-line: no-use-before-declare
+    const dialogRef = this.dialog.open(WeekdayDialog, {
+      data: this.dialogData
+    });
+  }
+
+  constructor(private auth: AuthService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.auth.getHomepageData().subscribe(
@@ -127,9 +148,31 @@ export class HomepageComponent implements OnInit {
         } else {
           this.lastNightMessage = 'Restless sleep';
         }
+
+        this.dialogData = {
+          Monday: this.data.best_day.Monday,
+          Tuesday: this.data.best_day.Tuesday,
+          Wednesday: this.data.best_day.Wednesday,
+          Thursday: this.data.best_day.Thursday,
+          Friday: this.data.best_day.Friday,
+          Saturday: this.data.best_day.Saturday,
+          Sunday: this.data.best_day.Sunday
+        };
       },
       err => console.error(err)
     );
   }
 
+}
+
+
+@Component({
+  selector: 'app-weekday-dialog',
+  templateUrl: 'weekday-dialog.html',
+})
+// tslint:disable-next-line: component-class-suffix
+export class WeekdayDialog {
+  constructor(
+    public dialogRef: MatDialogRef<WeekdayDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 }
