@@ -11,6 +11,32 @@ The proposed requirements at the beginning of the project are:
 - Data visualisation interface
 - Friendly UI
 
+# Structure
+
+The **frontend** folder holds an Angular application as a web client and the
+**backend** folder holds a Python backend server.
+
+## environment variables
+Environment variables' basic structure is in `.envrc.example` (we recommend using the package direnv for
+easily setting/unsetting them). Just duplicate the file to `.envrc` to make it work.
+
+More than this, in `frontend/oura-app/src/environments/` you can find base url settings for the Angular
+communication with the backend server.
+
+## activating the venv
+```bash
+cd backend && virtualenv .env && source .env/bin/activate # set a new virtual environment
+pip install -r requirements.txt # install backend dependencies
+```
+
+
+## deploying the frontend
+```bash
+cd frontend/oura-app && npm install # install frontend dependencies
+ng serve # run the angular server locally
+ng deploy # deploy to github pages
+```
+
 # Backend stack
 - Flask for REST API
 - flask-jwt-extended for Oauth user authentication
